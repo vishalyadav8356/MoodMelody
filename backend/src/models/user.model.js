@@ -14,6 +14,7 @@ const userShema = new mongoose.Schema({
     password:{
         type:String,
         required:[true, 'Password is required'],  
+        select:false, // to exclude password field when fetching user data
     },
 })
 

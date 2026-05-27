@@ -13,12 +13,10 @@ const Protected = ({ children }) => {
         )
     }
 
-    if ( !user) {
-        return <Navigate to="/login"  />
+    if (!user) {
+        return <Navigate to="/login" />
     }
-
     return children
-
 }
 
 export default Protected

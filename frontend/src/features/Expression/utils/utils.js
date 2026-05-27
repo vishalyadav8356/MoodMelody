@@ -17,7 +17,6 @@ export const init = async ({ videoRef, landmarkerRef, streamRef }) => {
   streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
   videoRef.current.srcObject = streamRef.current;
   await videoRef.current.play();
-  detect();
 };
 
 {/*detect function to detect the facial expression */}
@@ -27,6 +26,8 @@ export const detect = ({landmarkerRef, videoRef, setExpression}) => {
     videoRef.current,
     performance.now(),
   );
+  let currentExpression = "Neutral";
+  
   if (results.faceBlendshapes?.length > 0) {
     const blendshapes = results.faceBlendshapes[0].categories;
     const getScore = (name) =>
@@ -37,15 +38,16 @@ export const detect = ({landmarkerRef, videoRef, setExpression}) => {
     const browUp = getScore("browInnerUp");
     const frownLeft = getScore("mouthFrownLeft");
     const frownRight = getScore("mouthFrownRight");
-    let currentExpression = "Neutral";
     if (smileLeft > 0.5 && smileRight > 0.5) {
-      currentExpression = "Happy 😄";
+      currentExpression = "happy";
     } else if (jawOpen > 0.01 && browUp > 0.01) {
-      currentExpression = "Surprised 😲";
+      currentExpression = "surprised";
     } else if (frownLeft > 0.01 && frownRight > 0.01) {
-      currentExpression = "Sad 😢";
+      currentExpression = "sad";
     }
     setExpression(currentExpression);
   }
-  // animationRef.current = requestAnimationFrame(detect);
+
+  return currentExpression;
+
 };

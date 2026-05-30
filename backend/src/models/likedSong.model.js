@@ -1,0 +1,39 @@
+const mongoose = require('mongoose');
+
+const likedSongSchema = new mongoose.Schema({
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'User ID is required for a liked song'],
+    },
+    songId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'song',
+        required: [true, 'Song ID is required for a liked song'],
+    },
+    posterUrl:{
+        type:String,
+        required:[true, 'Poster URL is required for a liked song']
+    },
+    emotion:{
+        type: String,
+        enum:{
+            values: ['happy', 'sad','surprised'],
+            message: 'Emotion must be either happy, sad or surprised'
+        }
+    },
+    confidence:{
+        type: Number,
+        min: 0,
+        max: 1,
+        required: [true, 'Confidence score is required for a liked song']
+    }
+}, {
+    timestamps: true
+})
+
+likedSongSchema.index({userId:1, songId:1, emotion:1}, {unique: true})
+
+const likedSongModel = mongoose.model('likedSong', likedSongSchema);
+
+module.exports = likedSongModel;

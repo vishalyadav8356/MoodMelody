@@ -16,7 +16,7 @@ const formatTime = (seconds) => {
 
 const Player = () => {
 
-    const { song } = useSong()
+    const { song, isLiked, handleLike } = useSong()
 
     const audioRef = useRef(null)
     const progressRef = useRef(null)
@@ -150,7 +150,7 @@ const Player = () => {
                         className="w-16 h-16 rounded-lg object-cover"
                     />
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col flex-1">
                         <p className="font-semibold text-lg">
                             {song.title}
                         </p>
@@ -159,6 +159,15 @@ const Player = () => {
                             {song.mood}
                         </span>
                     </div>
+
+                    <button
+                        onClick={handleLike}
+                        className="text-2xl transition-transform active:scale-90 hover:scale-110"
+                        title={isLiked ? 'Unlike' : 'Like'}
+                    >
+                        {isLiked ? '❤️' : '🤍'}
+                    </button>
+
                 </div>
 
                 {/* Progress */}
@@ -217,11 +226,10 @@ const Player = () => {
                                                 <button
                                                     key={s}
                                                     onClick={() => handleSpeedChange(s)}
-                                                    className={`block w-full px-4 py-2 text-left hover:bg-zinc-700 ${
-                                                        s === speed
+                                                    className={`block w-full px-4 py-2 text-left hover:bg-zinc-700 ${s === speed
                                                             ? 'bg-zinc-700'
                                                             : ''
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {s}×
                                                 </button>

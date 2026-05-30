@@ -10,3 +10,39 @@ export async function getMood({mood}){
     const response = await api.get("/api/songs?mood=" + mood)
     return response.data
 }
+
+export async function toggleLikedSong(songData) {
+  const response = await api.post("/api/songs/like", songData)
+  return response.data
+}
+
+export async function checkLikedSong(songId, emotion) {
+  const response = await api.get("/api/songs/liked/check", {
+    params: { songId, emotion }
+  })
+  return response.data
+}
+
+export async function getLikedSongs(emotion = ''){
+  const response = await api.get("/api/songs/liked", {
+    params: emotion ? { emotion } : {}
+  })
+  return response.data
+}
+
+export async function createMoodLog(logData){
+  const response = await api.post("/api/moodlogs", logData)
+  return response.data
+}
+
+export async function getMoodLogs(emotion = ''){
+  const response = await api.get("/api/moodlogs", {
+    params: emotion ? { emotion } : {}
+  })
+  return response.data
+}
+
+export async function getMoodStats() {
+    const response = await api.get("/api/moodlogs/stats")
+    return response.data
+}

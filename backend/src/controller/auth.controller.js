@@ -1,7 +1,6 @@
 const userModel = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const blacklistModel = require('../models/blacklist.model');
 const redis = require('../config/cache');
 
 async function registerUser(req, res){
@@ -54,7 +53,8 @@ async function loginUser(req, res){
             {email},
             {username}
         ]
-    }).select('+password') // to include password field when fetching user data
+     }).select('+password') 
+    // to include password field when fetching user data
 
     if (!user){
         return res.status(400).json({
@@ -79,7 +79,7 @@ async function loginUser(req, res){
 
     return res.status(200).json({
         message: 'User logged in successfully',
-        user:{  
+        user:{
             id: user._id,
             username: user.username,
             email: user.email,

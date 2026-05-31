@@ -58,7 +58,20 @@ async function getSongs(req, res){
 
 }
 
+async function getAllSongs(req, res){
+    const filter = {}
+    if(req.query.mood) filter.mood = req.query.mood;
+
+    const songs = await songModel.find(filter).sort({ createdAt: -1 })
+
+    res.status(200).json({
+        message: 'Songs fetched successfully',
+        songs
+    })    
+}    
+
 module.exports = {
     uploadSong,
-    getSongs
+    getSongs,
+    getAllSongs
 }

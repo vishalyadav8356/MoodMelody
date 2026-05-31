@@ -1,21 +1,28 @@
-import { getMood, toggleLikedSong ,checkLikedSong, createMoodLog } from "../service/song.api.js";
+import { getMood, toggleLikedSong ,checkLikedSong, createMoodLog, getAllSongs } from "../service/song.api.js";
 import { useContext, useEffect } from "react";
 import { SongContext } from "../song.context.jsx";
 
 export const useSong = () => {
-  const { song, setSong, loading, setLoading, isLiked, setIsLiked, emotion, setEmotion } = useContext(SongContext);
+  const { song, setSong, loading, setLoading, isLiked, setIsLiked, emotion, setEmotion , confidence, setConfidence} = useContext(SongContext);
 
   async function handleGetSong({ mood }) {
     try {
       setLoading(true);
       const data = await getMood({ mood });
-      const fetchedSong = data.songs[0];
+      const fetchedSong = data.songs?.[0];
+      
+      if (!fetchedSong) {
+        console.error("No songs found for mood:", mood);
+        setLoading(false);
+        return;
+      }
+      
       setSong(fetchedSong);
       setEmotion(mood);
 
       await createMoodLog({ 
         emotion: mood, 
-        confidence: 0.87,
+        confidence: confidence || 0,
         songTitle: fetchedSong.title,
         posterUrl: fetchedSong.posterUrl
       });
@@ -46,7 +53,7 @@ export const useSong = () => {
         songUrl:   song.url,
         posterUrl: song.posterUrl,
         emotion,
-        confidence: 0.87
+        confidence
       });
       console.log("Liked song data:", data);
       setIsLiked(data.liked); // server confirm
@@ -54,7 +61,6 @@ export const useSong = () => {
       setIsLiked(prev => !prev); // rollback
     }
   }
-
 
   return {
     song,
@@ -64,6 +70,8 @@ export const useSong = () => {
     isLiked,
     setIsLiked,
     emotion,
-    setEmotion
-  };
-};
+    setEmotion,
+    confidence,
+    setConfidence
+  }
+}

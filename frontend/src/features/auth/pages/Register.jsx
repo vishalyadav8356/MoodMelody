@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../shared/styles/button.css'
-import FromGroup from '../components/FormGroup'
+import FormGroup from '../components/FormGroup'
 import { Link, useNavigate } from 'react-router-dom'
 import {useAuth} from '../hooks/useAuth'
 
@@ -16,7 +16,7 @@ const Register = () => {
     async function handleSubmit(e){
         e.preventDefault()
 
-        await handleRegister({username, email, password})
+        await handleRegister({username: name, email, password})
         navigate('/')
     }
 
@@ -25,16 +25,16 @@ const Register = () => {
             <div className='min-w-[300px] '>
                 <h1 className='text-2xl font-bold text-white mb-4'>Register</h1>
 
-                <form className='flex flex-col gap-4'onSubmit={handleSubmit}>
-                    <FromGroup
+                <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+                    <FormGroup
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                      label='Name' placeholder='Enter your name' />
-                    <FromGroup 
+                    <FormGroup 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     label='Email' placeholder='Enter your email' />
-                    <FromGroup 
+                    <FormGroup 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     label='Password' placeholder='Enter your password' />

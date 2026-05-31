@@ -46,3 +46,10 @@ export async function getMoodStats() {
     const response = await api.get("/api/moodlogs/stats")
     return response.data
 }
+
+export async function getAllSongs(mood = '') {
+    const response = await api.get("/api/songs/all", {
+        params: mood ? { mood } : {}
+    });
+    return response.data;
+}

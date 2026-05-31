@@ -13,9 +13,10 @@ export const SongContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [emotion, setEmotion] = useState(null)
+  const [confidence, setConfidence] = useState(0)
 
   return (
-    <SongContext.Provider value={{ song, setSong, loading, setLoading, isLiked, setIsLiked, emotion, setEmotion }}>
+    <SongContext.Provider value={{ song, setSong, loading, setLoading, isLiked, setIsLiked, emotion, setEmotion, confidence, setConfidence }}>
       {children}
     </SongContext.Provider>
   )

@@ -8,7 +8,10 @@ import Home from './features/home/pages/Home'
 import LikedSong from './features/home/pages/LikedSong'
 import MoodHistory from './features/home/pages/MoodHistory'
 import MoodBackground from './features/shared/components/MoodBackground'
+import Navbar from './features/shared/components/Navbar'
 import { useSong } from './features/home/hooks/useSong'
+import BottomNav from './features/shared/components/BottomNav'
+
 
 const App = () => {
   const { emotion } = useSong()
@@ -17,17 +20,23 @@ const App = () => {
 
         <MoodBackground emotion={emotion} />
 
-      <div className="relative z-10">
-        <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/' element={<Protected><Home /></Protected>} />
-          <Route path='/liked' element={<Protected><LikedSong /></Protected>} />
-          <Route path='/history' element={<Protected><MoodHistory /></Protected>} />
-        </Routes>
+
+      <div className="relative z-10 flex flex-col overflow-hidde" style={{ height: '100vh' }}>
+        <Navbar/>
+        <div className="flex-1 overflow-hidden">
+          <Routes>
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/' element={<Protected><Home /></Protected>} />
+            <Route path='/liked' element={<Protected><LikedSong /></Protected>} />
+            <Route path='/history' element={<Protected><MoodHistory /></Protected>} />
+          </Routes>
+        </div>
       </div>
 
-    </div>
+
+    <BottomNav/>
+    </div>  
   )
 }
 

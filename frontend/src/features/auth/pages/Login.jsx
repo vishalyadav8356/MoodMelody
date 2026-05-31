@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import '../../shared/styles/button.css'
-import FromGroup from '../components/FormGroup'
+import FormGroup from '../components/FormGroup'
 import { Link, useNavigate } from 'react-router-dom'
 import {useAuth} from '../hooks/useAuth'
 
@@ -24,12 +24,12 @@ const Login = () => {
                 <h1 className='text-2xl font-bold text-white mb-4'>Login</h1>
 
                 <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-                    <FromGroup 
+                    <FormGroup 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         label='Email' placeholder='Enter your email' />
 
-                    <FromGroup 
+                    <FormGroup 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         label='Password' placeholder='Enter your password' />

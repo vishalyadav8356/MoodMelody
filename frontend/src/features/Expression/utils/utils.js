@@ -27,6 +27,7 @@ export const detect = ({landmarkerRef, videoRef, setExpression}) => {
     performance.now(),
   );
   let currentExpression = "Neutral";
+  let confidence = 0;
   
   if (results.faceBlendshapes?.length > 0) {
     const blendshapes = results.faceBlendshapes[0].categories;
@@ -40,14 +41,18 @@ export const detect = ({landmarkerRef, videoRef, setExpression}) => {
     const frownRight = getScore("mouthFrownRight");
     if (smileLeft > 0.5 && smileRight > 0.5) {
       currentExpression = "happy";
+      confidence = (smileLeft + smileRight) / 2;
     } else if (jawOpen > 0.01 && browUp > 0.01) {
       currentExpression = "surprised";
+      confidence = (jawOpen + browUp) / 2;
     } else if (frownLeft > 0.01 && frownRight > 0.01) {
       currentExpression = "sad";
+      confidence = (frownLeft + frownRight) / 2;
     }
+    confidence = Math.round(confidence * 100) / 100
     setExpression(currentExpression);
   }
 
-  return currentExpression;
+  return {currentExpression, confidence};
 
 };

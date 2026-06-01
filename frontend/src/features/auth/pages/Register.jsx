@@ -1,17 +1,17 @@
-import React from 'react'
 import '../../shared/styles/button.css'
 import FormGroup from '../components/FormGroup'
 import { Link, useNavigate } from 'react-router-dom'
 import {useAuth} from '../hooks/useAuth'
+import { useState } from 'react'
 
 const Register = () => {
   const navigate = useNavigate()
 
-  const [name, setName] = React.useState('')
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-    const {loading , handleRegister} = useAuth()
+    const { handleRegister } = useAuth()
 
     async function handleSubmit(e){
         e.preventDefault()

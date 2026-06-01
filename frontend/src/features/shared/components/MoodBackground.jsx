@@ -1,5 +1,5 @@
-import React from 'react'
 import { moodTheme } from '../utils/moodTheme'
+import PropTypes from 'prop-types'
 
 const MoodBackground = ({ emotion }) => {
   const theme = moodTheme[emotion] || moodTheme.default
@@ -53,6 +53,10 @@ const MoodBackground = ({ emotion }) => {
       `}</style>
     </div>
   )
+}
+
+MoodBackground.propTypes = {
+  emotion: PropTypes.string,
 }
 
 export default MoodBackground

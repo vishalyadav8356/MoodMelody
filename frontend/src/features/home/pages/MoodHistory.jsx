@@ -1,9 +1,8 @@
-import React from 'react'
 import { useMoodLogs } from '../hooks/useMoodLogs'
 import { useNavigate } from 'react-router-dom'
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, Legend
+  BarChart, Bar, XAxis, YAxis
 } from 'recharts'
 
 const MOOD_EMOJI = {

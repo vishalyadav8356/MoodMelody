@@ -22,6 +22,9 @@ const moodLogSchema = new mongoose.Schema({
     songId:{
         type: String,
     },
+    songTitle:{
+        type: String,
+    },
     posterUrl:{
         type: String,
     },

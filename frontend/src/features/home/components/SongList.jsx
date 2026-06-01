@@ -2,14 +2,21 @@ import React, { useState, useEffect } from 'react'
 import { getAllSongs } from '../service/song.api'
 import { useSong } from '../hooks/useSong'
 
-const MOODS = ['all', 'happy', 'sad', 'surprised']
-const MOOD_EMOJI = { all: '🎵', happy: '😊', sad: '😢', surprised: '😲' }
+const MOODS = ['all', 'happy', 'sad', 'surprised', 'neutral']
+
 
 const SongList = () => {
   const [songs, setSongs] = useState([])
   const [loading, setLoading] = useState(false)
   const [selectedMood, setSelectedMood] = useState('all')
-  const { setSong, emotion } = useSong()
+  const { setSong, emotion, playSong } = useSong()
+
+  // Emotion change hone pe auto filter
+  useEffect(() => {
+    if (emotion && emotion !== 'neutral') {
+      setSelectedMood(emotion)  // ← detect hone pe auto filter
+    }
+  }, [emotion])
 
   useEffect(() => {
     async function fetchSongs() {
@@ -26,9 +33,8 @@ const SongList = () => {
     fetchSongs()
   }, [selectedMood])
 
-  // Song click pe directly play karo
-  const handleSongClick = (song) => {
-    setSong(song)
+  const handleSongClick = (song, index) => {
+    playSong(songs , index)
   }
 
   return (
@@ -36,11 +42,11 @@ const SongList = () => {
 
       {/* Title */}
       <p className="text-xs text-white/40 uppercase tracking-widest mb-3 font-medium">
-        Songs
+        Recommended for You
       </p>
 
       {/* Mood filter chips */}
-      <div className="flex gap-2 mb-4 flex-wrap">
+      <div className="flex gap-2 mb-4 flex-wrap shrink-0">
         {MOODS.map((mood) => (
           <button
             key={mood}
@@ -51,7 +57,7 @@ const SongList = () => {
                 : 'bg-white/10 text-white/60 hover:bg-white/20'
               }`}
           >
-            {MOOD_EMOJI[mood]} {mood}
+            {MOODS[mood]} {mood}
           </button>
         ))}
       </div>
@@ -65,11 +71,14 @@ const SongList = () => {
 
       {/* Songs list */}
       {!loading && (
-        <div className="flex flex-col gap-2 overflow-y-auto flex-1 pr-1"   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          {songs.map((song) => (
+        <div
+          className="flex flex-col gap-2 overflow-y-auto flex-1 pr-1"
+          style={{ scrollbarWidth: 'none' }}
+        >
+          {songs.map((song, index) => (
             <div
               key={song._id}
-              onClick={() => handleSongClick(song)}
+              onClick={() => handleSongClick(song, index)}
               className="flex items-center gap-3 bg-white/5 hover:bg-white/15 border border-white/10 rounded-xl px-3 py-2.5 cursor-pointer transition group"
             >
               <img
@@ -78,11 +87,11 @@ const SongList = () => {
                 className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
               />
               <div className="flex flex-col flex-1 min-w-0">
-                <p className="text-sm text-white font-medium truncate group-hover:text-white transition">
+                <p className="text-sm text-white font-medium truncate">
                   {song.title}
                 </p>
                 <span className="text-xs text-white/40 capitalize">
-                  {MOOD_EMOJI[song.mood]} {song.mood}
+                  {MOODS[song.mood]} {song.mood}
                 </span>
               </div>
               <span className="text-white/20 group-hover:text-white/60 transition text-lg">

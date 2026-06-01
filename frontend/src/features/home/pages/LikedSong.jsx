@@ -1,6 +1,5 @@
 // features/home/pages/LikedSongs.jsx
 
-import React from 'react'
 import { useLikedSongs } from '../hooks/useLikedSongs'
 import { useNavigate } from 'react-router-dom'
 

@@ -1,5 +1,7 @@
 import {createContext, useState} from 'react'
+import PropTypes from 'prop-types'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext()
 
 export const AuthProvider = ({children}) =>{
@@ -11,5 +13,8 @@ export const AuthProvider = ({children}) =>{
             {children}
         </AuthContext.Provider>
     )
+}
 
+AuthProvider.propTypes = {
+    children: PropTypes.node.isRequired,
 }

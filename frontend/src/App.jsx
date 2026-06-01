@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Login from './features/auth/pages/Login'
 import Register from './features/auth/pages/Register'
@@ -21,7 +20,7 @@ const App = () => {
         <MoodBackground emotion={emotion} />
 
 
-      <div className="relative z-10 flex flex-col overflow-hidde" style={{ height: '100vh' }}>
+      <div className="relative z-10 flex flex-col overflow-hidden" style={{ height: '100vh' }}>
         <Navbar/>
         <div className="flex-1 overflow-hidden">
           <Routes>

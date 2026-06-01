@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import { init, detect } from "../utils/utils";
 
 export default function FaceExpression({ onClick = () => {} }) {
@@ -19,12 +20,16 @@ export default function FaceExpression({ onClick = () => {} }) {
 
         initalize();
 
+        // Store refs in variables for cleanup
+        const landmarker = landmarkerRef.current;
+        const video = videoRef.current;
+
         return () => {
-            if (landmarkerRef.current) {
-                landmarkerRef.current.close();
+            if (landmarker) {
+                landmarker.close();
             }
-            if (videoRef.current?.srcObject) {
-                videoRef.current.srcObject
+            if (video?.srcObject) {
+                video.srcObject
                     .getTracks()
                     .forEach((track) => track.stop());
             }
@@ -76,4 +81,8 @@ return (
 
   </div>
 )
+}
+
+FaceExpression.propTypes = {
+  onClick: PropTypes.func.isRequired,
 }

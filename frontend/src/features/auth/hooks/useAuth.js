@@ -25,7 +25,7 @@ const useAuth = () =>{
         try {
             const data = await getMe()
             setUser(data.user)
-        } catch (error) {
+        } catch {
             setUser(null)
         } finally {
             setLoading(false)
@@ -46,6 +46,7 @@ const useAuth = () =>{
 
     useEffect(() => {
         handleGetMe()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return {

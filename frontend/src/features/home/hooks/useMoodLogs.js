@@ -9,27 +9,26 @@ export const useMoodLogs = () => {
   const [loading, setLoading] = useState(false)
   const [selectedMood, setSelectedMood] = useState('all')
 
-  // Stats ek baar fetch karo — filter se affect nahi hoga
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const data = await getMoodStats()
-        setStats(data)
-      } catch (error) {
-        console.error("Error fetching stats:", error)
-      }
+  async function fetchStats() {
+    try {
+      const data = await getMoodStats()
+      setStats(data)
+    } catch (error) {
+      console.error("Error fetching stats:", error)
     }
+  }
+
+  useEffect(() => {
     fetchStats()
   }, [])
 
-  // Logs — filter ke saath
   useEffect(() => {
     async function fetchMoodLogs() {
       try {
         setLoading(true)
         const data = await getMoodLogs(selectedMood === 'all' ? '' : selectedMood)
-        setMoodLogs(data.log)
-      } catch (error) {
+        setMoodLogs(data.logs || [])
+      } catch {
         setMoodLogs([])
       } finally {
         setLoading(false)
@@ -38,5 +37,5 @@ export const useMoodLogs = () => {
     fetchMoodLogs()
   }, [selectedMood])
 
-  return { moodLogs, stats, loading, selectedMood, setSelectedMood, MOODS }
+  return { moodLogs, stats, loading, selectedMood, setSelectedMood, MOODS, refreshStats: fetchStats }
 }

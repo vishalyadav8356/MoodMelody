@@ -1,9 +1,9 @@
-import { getMood, toggleLikedSong ,checkLikedSong, createMoodLog, getAllSongs } from "../service/song.api.js";
+import { getMood, toggleLikedSong ,checkLikedSong, createMoodLog } from "../service/song.api.js";
 import { useContext, useEffect } from "react";
 import { SongContext } from "../song.context.jsx";
 
 export const useSong = () => {
-  const { song, setSong, loading, setLoading, isLiked, setIsLiked, emotion, setEmotion , confidence, setConfidence} = useContext(SongContext);
+  const { song, setSong, loading, setLoading, isLiked, setIsLiked, emotion, setEmotion , confidence, setConfidence,   queue, setQueue, queueIndex, setQueueIndex } = useContext(SongContext);
 
   async function handleGetSong({ mood }) {
     try {
@@ -20,26 +20,21 @@ export const useSong = () => {
       setSong(fetchedSong);
       setEmotion(mood);
 
-      await createMoodLog({ 
-        emotion: mood, 
-        confidence: confidence || 0,
-        songTitle: fetchedSong.title,
-        posterUrl: fetchedSong.posterUrl
-      });
-      
+         if (mood !== emotion) {
+        await createMoodLog({ 
+          emotion: mood, 
+          confidence: confidence || 0,
+          songTitle: fetchedSong.title,
+          posterUrl: fetchedSong.posterUrl
+        });
+      }
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching songs:", error);
       setLoading(false);
     }
   }
-
-    useEffect(() => {
-    if (!song?._id || !emotion) return;
-    checkLikedSong(song._id, emotion)
-      .then(data => setIsLiked(data.liked))
-      .catch(() => setIsLiked(false));
-  }, [song?._id, emotion]);
 
    // Heart button handler
   async function handleLike() {
@@ -62,8 +57,33 @@ export const useSong = () => {
     }
   }
 
+  async function playSong(song, index) {
+     setQueue(song)
+     setQueueIndex(index)
+     setSong(song[index])
+  }
+
+  async function playNext() {
+  if (queueIndex < queue.length - 1) {
+    const nextIndex = queueIndex + 1
+    setQueueIndex(nextIndex)
+    setSong(queue[nextIndex])
+  } else {
+    setQueueIndex(-1)
+  }
+}
+
+    useEffect(() => {
+    if (!song?._id || !emotion) return;
+    checkLikedSong(song._id, emotion)
+      .then(data => setIsLiked(data.liked))
+      .catch(() => setIsLiked(false));
+  }, [song?._id, emotion]);
+
+
   return {
     song,
+    setSong,
     loading,
     handleGetSong,
     handleLike,
@@ -72,6 +92,10 @@ export const useSong = () => {
     emotion,
     setEmotion,
     confidence,
-    setConfidence
+    setConfidence,
+    playSong,
+    playNext,
+    queue, 
+    queueIndex
   }
 }

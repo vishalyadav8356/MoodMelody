@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import '../../shared/styles/button.css'
 import FormGroup from '../components/FormGroup'
 import { Link, useNavigate } from 'react-router-dom'
@@ -7,7 +7,7 @@ import {useAuth} from '../hooks/useAuth'
 const Login = () => {
     const navigate = useNavigate()
 
-    const {loading , handleLogin} = useAuth()
+    const { handleLogin } = useAuth()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -37,7 +37,7 @@ const Login = () => {
                     <button className='button' type='submit'>Login</button>
                 </form>
                  <p className='text-sm text-white mt-2'>
-                    Don't have an account? <Link to="/register" className='text-[#dd4200]'>Create Account</Link>
+                    Don&apos;t have an account? <Link to="/register" className='text-[#dd4200]'>Create Account</Link>
                 </p>
             </div>
         </main>

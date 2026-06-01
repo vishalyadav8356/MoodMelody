@@ -1,4 +1,3 @@
-import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useSong } from '../../home/hooks/useSong'
 import { moodTheme } from '../utils/moodTheme'

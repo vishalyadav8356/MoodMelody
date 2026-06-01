@@ -1,4 +1,4 @@
-import React from 'react'
+import PropTypes from 'prop-types'
 
 const FormGroup = ({label, placeholder, value, onChange}) => {
   return (
@@ -9,6 +9,13 @@ const FormGroup = ({label, placeholder, value, onChange}) => {
       type='text' id={label} name={label} placeholder={placeholder}  required />
     </div>
   )
+}
+
+FormGroup.propTypes = {
+  label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 }
 
 export default FormGroup

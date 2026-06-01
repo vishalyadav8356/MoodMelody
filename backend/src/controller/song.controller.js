@@ -28,7 +28,7 @@ async function uploadSong(req, res) {
         title: tags.title,
         url: songFile.url,
         posterUrl: posterFile.url,
-        mood
+        mood: mood?.toLowerCase()
     })
 
     res.status(201).json({
@@ -44,7 +44,7 @@ async function getSongs(req, res){
 
     const songs = await songModel.aggregate([
         {
-            $match: { mood }
+            $match: { mood: mood?.toLowerCase() }
         },
         {
             $sample: { size: 1 }
@@ -60,7 +60,7 @@ async function getSongs(req, res){
 
 async function getAllSongs(req, res){
     const filter = {}
-    if(req.query.mood) filter.mood = req.query.mood;
+    if(req.query.mood) filter.mood = req.query.mood.toLowerCase();
 
     const songs = await songModel.find(filter).sort({ createdAt: -1 })
 

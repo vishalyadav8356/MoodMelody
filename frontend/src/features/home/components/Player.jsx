@@ -12,9 +12,10 @@ const formatTime = (seconds) => {
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5, 2]
 
 const Player = () => {
-    const { song, isLiked, handleLike, emotion, playNext, queueIndex} = useSong()
+    const { song, isLiked, handleLike, emotion, playNext, queueIndex } = useSong()
     const theme = moodTheme[emotion] || moodTheme.default
     const accent = theme.accent
+
 
     const audioRef = useRef(null)
     const progressRef = useRef(null)
@@ -30,23 +31,27 @@ const Player = () => {
     const isFirstLoad = useRef(true)  // ← top pe add karo
 
     useEffect(() => {
-        if (audioRef.current) {
-            audioRef.current.load()
-            setCurrentTime(0)
-            setIsPlaying(false)
-    
-            if (isFirstLoad.current) {
-                isFirstLoad.current = false
+        if (!audioRef.current) return
 
-            }return
+        audioRef.current.load()
+        setCurrentTime(0)
+        setIsPlaying(false)
 
-            audioRef.current.addEventListener('loadeddata', () => {
-                audioRef.current.play()
+        if (isFirstLoad.current) {
+            isFirstLoad.current = false
+            return
+        }
+
+        audioRef.current.addEventListener(
+            'loadeddata',
+            () => {
+                audioRef.current
+                    .play()
                     .then(() => setIsPlaying(true))
                     .catch(err => console.error('Autoplay blocked:', err))
-            }, { once: true })
-
-        }
+            },
+            { once: true }
+        )
     }, [song?.url])
 
     useEffect(() => {
@@ -117,34 +122,37 @@ const Player = () => {
                 src={song.url}
                 onTimeUpdate={() => setCurrentTime(audioRef.current.currentTime)}
                 onLoadedMetadata={() => setDuration(audioRef.current.duration)}
-                onEnded={() => { setIsPlaying(false); setCurrentTime(0) }}
+                onEnded={handleSongEnd}
             />
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
 
                 {/* Left — Song info */}
-                <div className="flex items-center gap-3 w-64 shrink-0">
+                <div className="flex items-center gap-3 w-full md:w-64 shrink-0">
                     <img
                         src={song.posterUrl}
                         alt={song.title}
-                        className="w-12 h-12 rounded-lg object-cover shrink-0"
+                        className="w-10 h-10 rounded-lg object-cover shrink-0"
                     />
                     <div className="flex flex-col min-w-0">
-                        <p className="text-sm font-medium truncate">{song.title}</p>
-                        <span className="text-xs capitalize" style={{ color: accent }}>
+                        <p className="text-xs font-medium truncate">{song.title}</p>
+                        <span className="text-[11px] capitalize" style={{ color: accent }}>
                             {song.mood}
                         </span>
                     </div>
-                    <button onClick={handleLike} className="text-lg ml-2 shrink-0 transition-transform hover:scale-110 active:scale-90">
+                    <button
+                        onClick={handleLike}
+                        className="text-base ml-auto shrink-0"
+                    >
                         {isLiked ? '❤️' : '🤍'}
                     </button>
                 </div>
 
                 {/* Center — Controls + Progress */}
-                <div className="flex flex-col flex-1 gap-1">
+                <div className="flex flex-col flex-1 gap-2 w-full">
 
                     {/* Controls */}
-                    <div className="flex items-center justify-center gap-4">
+                    <div className="flex items-center justify-center gap-3 md:gap-4">
 
                         {/* Speed */}
                         <div className="relative">
@@ -178,14 +186,18 @@ const Player = () => {
                         {/* Play/Pause */}
                         <button
                             onClick={togglePlay}
-                            className="w-9 h-9 rounded-full flex items-center justify-center text-black font-bold transition hover:scale-105 active:scale-95"
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-black font-bold transition hover:scale-105 active:scale-95"
                             style={{ background: accent }}
                         >
                             {isPlaying ? '❚❚' : '▶'}
                         </button>
 
                         {/* +5s */}
-                        <button onClick={() => skip(5)} className="text-white/50 hover:text-white transition text-lg">
+                        <button className="text-white/50 hover:text-white transition text-sm">
+                            ⏮
+                        </button>
+
+                        <button className="text-white/50 hover:text-white transition text-sm">
                             ⏭
                         </button>
 
@@ -197,14 +209,14 @@ const Player = () => {
                         <div
                             ref={progressRef}
                             onClick={handleProgressClick}
-                            className="relative flex-1 h-1 bg-white/10 rounded-full cursor-pointer group"
+                            className="relative flex-1 h-[3px] bg-white/10 rounded-full"
                         >
                             <div
                                 className="absolute top-0 left-0 h-1 rounded-full transition-all"
                                 style={{ width: `${progress}%`, background: accent }}
                             />
                             <div
-                                className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full opacity-0 group-hover:opacity-100 transition"
+                               className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                                 style={{ left: `${progress}%`, background: accent }}
                             />
                         </div>
@@ -214,7 +226,7 @@ const Player = () => {
                 </div>
 
                 {/* Right — Volume */}
-                <div className="flex items-center gap-2 w-36 shrink-0 justify-end">
+                <div className="hidden md:flex items-center gap-2 w-36 shrink-0 justify-end">
                     <button onClick={toggleMute} className="text-white/40 hover:text-white transition text-sm">
                         {isMuted || volume === 0 ? '🔇' : '🔊'}
                     </button>

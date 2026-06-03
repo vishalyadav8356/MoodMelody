@@ -9,7 +9,6 @@ import MoodHistory from './features/home/pages/MoodHistory'
 import MoodBackground from './features/shared/components/MoodBackground'
 import Navbar from './features/shared/components/Navbar'
 import { useSong } from './features/home/hooks/useSong'
-import BottomNav from './features/shared/components/BottomNav'
 
 
 const App = () => {
@@ -17,12 +16,12 @@ const App = () => {
   return (
     <div className="relative min-h-screen bg-zinc-950">
 
-        <MoodBackground emotion={emotion} />
+      <MoodBackground emotion={emotion} />
 
 
-      <div className="relative z-10 flex flex-col overflow-hidden" style={{ height: '100vh' }}>
-        <Navbar/>
-        <div className="flex-1 overflow-hidden">
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
+        <div className="flex-1 overflow-auto">
           <Routes>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
@@ -33,9 +32,7 @@ const App = () => {
         </div>
       </div>
 
-
-    <BottomNav/>
-    </div>  
+    </div>
   )
 }
 

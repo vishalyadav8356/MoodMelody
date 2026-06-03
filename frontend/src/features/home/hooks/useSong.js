@@ -37,25 +37,42 @@ export const useSong = () => {
   }
 
    // Heart button handler
-  async function handleLike() {
-    if (!song || !emotion) return;
-    setIsLiked(prev => !prev); // optimistic UI
+async function handleLike() {
+  if (!song?._id) return;
 
-    try {
-      const data = await toggleLikedSong({
-        songId:    song._id,
-        songTitle: song.title,
-        songUrl:   song.url,
-        posterUrl: song.posterUrl,
-        emotion,
-        confidence
-      });
-      console.log("Liked song data:", data);
-      setIsLiked(data.liked); // server confirm
-    } catch {
-      setIsLiked(prev => !prev); // rollback
-    }
+  const prevLiked = isLiked;
+  const nextLiked = !prevLiked;
+
+  setIsLiked(nextLiked);
+  setSong(prev => prev ? { ...prev, isLiked: nextLiked } : prev);
+
+  try {
+    const data = await toggleLikedSong({
+      songId: song._id,
+      songTitle: song.title,
+      songUrl: song.url,
+      posterUrl: song.posterUrl,
+      emotion: emotion || 'neutral',
+      confidence: confidence || 0
+    });
+
+    console.log('Liked song data:', data);
+
+    const finalLiked =
+      typeof data?.liked === 'boolean'
+        ? data.liked
+        : typeof data?.isLiked === 'boolean'
+        ? data.isLiked
+        : nextLiked;
+
+    setIsLiked(finalLiked);
+    setSong(prev => prev ? { ...prev, isLiked: finalLiked } : prev);
+  } catch (error) {
+    console.error('Like error:', error);
+    setIsLiked(prevLiked);
+    setSong(prev => prev ? { ...prev, isLiked: prevLiked } : prev);
   }
+}
 
   async function playSong(song, index) {
      setQueue(song)

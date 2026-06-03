@@ -1,5 +1,3 @@
-// features/home/pages/LikedSongs.jsx
-
 import { useLikedSongs } from '../hooks/useLikedSongs'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,7 +5,8 @@ const MOOD_EMOJI = {
   all: '🎵',
   happy: '😊',
   sad: '😢',
-  surprised: '😲'
+  surprised: '😲',
+  neutral: '😐'
 }
 
 const LikedSongs = () => {
@@ -15,26 +14,26 @@ const LikedSongs = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white px-6 py-8">
+    <div className="min-h-screen text-white px-3 md:px-6 py-4 md:py-8 max-w-6xl mx-auto flex flex-col">
 
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center gap-3 mb-6 md:mb-8">
         <button
           onClick={() => navigate('/')}
           className="px-3 py-2 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition text-sm"
         >
-          ← Back
+          ←
         </button>
-        <h1 className="text-2xl font-bold">❤️ Liked Songs</h1>
+        <h1 className="text-xl md:text-2xl font-bold"> Liked Songs</h1>
       </div>
 
       {/* Mood Filter Chips */}
-      <div className="flex gap-3 mb-8 flex-wrap">
+      <div className="flex gap-2 md:gap-3 mb-6 md:mb-8 flex-wrap">
         {MOODS.map((mood) => (
           <button
             key={mood}
             onClick={() => setSelectedMood(mood)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition capitalize
+            className={`px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium
               ${selectedMood === mood
                 ? 'bg-green-500 text-black'
                 : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
@@ -55,8 +54,8 @@ const LikedSongs = () => {
       {/* Empty State */}
       {!loading && likedSongs.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-4 text-zinc-500">
-          <span className="text-5xl">🤍</span>
-          <p className="text-lg">
+          <span className="text-4xl md:text-5xl">🤍</span>
+          <p className="text-base md:text-lg text-center px-4">
             {selectedMood === 'all'
               ? 'Koi liked song nahi hai abhi'
               : `${selectedMood} mood mein koi liked song nahi`}
@@ -72,7 +71,7 @@ const LikedSongs = () => {
 
       {/* Songs List */}
       {!loading && likedSongs.length > 0 && (
-        <div className="flex flex-col gap-3">
+        <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-1 md:pr-2 mb-4">
 
           {/* Total count */}
           <p className="text-sm text-zinc-500 mb-2">
@@ -82,23 +81,22 @@ const LikedSongs = () => {
           {likedSongs.map((item) => (
             <div
               key={item._id}
-              className="flex items-center gap-4 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 hover:bg-zinc-800 transition"
-            >
+              className="flex items-center gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-3 md:px-4 py-3 hover:bg-white/10 transition"      >
               {/* Poster */}
               <img
                 src={item.posterUrl}
                 alt={item.songTitle}
-                className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                className="w-12 h-12 md:w-14 md:h-14 rounded-lg object-cover"
               />
 
               {/* Info */}
               <div className="flex flex-col flex-1 min-w-0">
-                <p className="font-medium truncate">{item.songTitle}</p>
+                <p className="text-sm md:text-base font-medium truncate">{item.songTitle}</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs px-2 py-0.5 bg-zinc-800 rounded-full capitalize text-zinc-400">
+                  <span className="text-[10px] md:text-xs px-2 py-0.5 bg-zinc-800 rounded-full capitalize text-zinc-400">
                     {MOOD_EMOJI[item.emotion]} {item.emotion}
                   </span>
-                  <span className="text-xs text-zinc-600">
+                  <span className="hidden sm:block text-xs text-zinc-500">
                     {new Date(item.createdAt).toLocaleDateString()}
                   </span>
                 </div>

@@ -5,12 +5,7 @@ import PropTypes from 'prop-types'
 export const SongContext = createContext()
 
 export const SongContextProvider = ({ children }) => {
-  const [song, setSong] = useState({
-    url: 'https://ik.imagekit.io/m1knczwsx/cohort2/moodify/songs/I_Really_Do__RiskyjaTT.CoM__tIapZKACI.mp3',
-    posterUrl: 'https://ik.imagekit.io/m1knczwsx/cohort2/moodify/posters/I_Really_Do__RiskyjaTT.CoM__wW9wIqIlJ.jpeg',
-    title: 'I Really Do (RiskyjaTT.CoM)',
-    mood: 'happy',
-  })
+  const [song, setSong] = useState(null)
 
   const [loading, setLoading] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
@@ -18,6 +13,7 @@ export const SongContextProvider = ({ children }) => {
   const [confidence, setConfidence] = useState(0)
   const [queue, setQueue] = useState([])
   const [queueIndex, setQueueIndex] = useState(-1)
+
 
 
   return (

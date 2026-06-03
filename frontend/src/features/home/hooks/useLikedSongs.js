@@ -1,9 +1,7 @@
-// features/home/hooks/useLikedSongs.js
-
 import { useState, useEffect } from "react";
 import { getLikedSongs } from "../service/song.api.js";
 
-const MOODS = ['all', 'happy', 'sad', 'surprised']
+const MOODS = ['all', 'happy', 'sad', 'surprised', 'neutral']
 
 export const useLikedSongs = () => {
   const [likedSongs, setLikedSongs] = useState([])

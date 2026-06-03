@@ -1,4 +1,3 @@
-import '../../shared/styles/button.css'
 import FormGroup from '../components/FormGroup'
 import { Link, useNavigate } from 'react-router-dom'
 import {useAuth} from '../hooks/useAuth'
@@ -38,7 +37,7 @@ const Register = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     label='Password' placeholder='Enter your password' />
-                    <button className='button' type='submit'>Register</button>
+                    <button className='w-full bg-[#dd4200] hover:bg-[#c23900] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 active:scale-95' type='submit'>Register</button>
                 </form>
                  <p className='text-sm text-white mt-2'>Already have an account? <Link to="/login" className="text-[#dd4200]">Login to Account</Link></p>
             </div>

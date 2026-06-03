@@ -15,11 +15,15 @@ const likedSongSchema = new mongoose.Schema({
         type:String,
         required:[true, 'Poster URL is required for a liked song']
     },
+    songTitle:{
+        type:String,
+        required:[true, 'Song title is required for a liked song']
+    },
     emotion:{
         type: String,
         enum:{
-            values: ['happy', 'sad','surprised'],
-            message: 'Emotion must be either happy, sad or surprised'
+            values: ['happy', 'sad','surprised', 'neutral'],
+            message: 'Emotion must be either happy, sad, surprised or neutral'
         }
     },
     confidence:{

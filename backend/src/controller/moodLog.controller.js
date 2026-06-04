@@ -31,21 +31,40 @@ async function getMoodLogs(req, res) {
   }
 }
 
+
 async function getMoodStats(req, res) {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
 
-    // Overall distribution
+    // Last 7 days start
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+
+    // Distribution (Last 7 Days Only)
     const distribution = await MoodLog.aggregate([
-      { $match: { userId } },
-      { $group: { _id: "$emotion", count: { $sum: 1 } } },
-      { $project: { emotion: "$_id", count: 1, _id: 0 } },
+      {
+        $match: {
+          userId,
+          createdAt: { $gte: sevenDaysAgo },
+        },
+      },
+      {
+        $group: {
+          _id: "$emotion",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          emotion: "$_id",
+          count: 1,
+          _id: 0,
+        },
+      },
     ]);
 
-    // Last 7 days timeline
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
+    // Timeline (Last 7 Days)
     const timeline = await MoodLog.aggregate([
       {
         $match: {
@@ -68,21 +87,39 @@ async function getMoodStats(req, res) {
           count: { $sum: 1 },
         },
       },
-      { $sort: { "_id.date": 1 } },
+      {
+        $sort: {
+          "_id.date": 1,
+        },
+      },
     ]);
 
+    // Today's Logs Only
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const allLogs = await MoodLog.find({ userId }).sort({ createdAt: -1 });
-    const recentLogs = allLogs.filter((log, index) => {
-      if (index === 0) return true
-      return log.emotion !== allLogs[index - 1].emotion
-    }).slice(0, 10)
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-    res.status(200).json({ distribution, timeline, recentLogs });
+    const recentLogs = await MoodLog.find({
+      userId,
+      createdAt: {
+        $gte: today,
+        $lt: tomorrow,
+      },
+    })
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    res.status(200).json({
+      distribution,
+      timeline,
+      recentLogs,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 }
 

@@ -32,6 +32,11 @@ const moodLogSchema = new mongoose.Schema({
     timestamps: true
 })
 
+moodLogSchema.index(
+    { createdAt: 1 },
+    { expireAfterSeconds: 60 * 60 * 24 * 7 }
+);
+
 const MoodLog = mongoose.model('MoodLog', moodLogSchema)
 
 module.exports = MoodLog;

@@ -90,12 +90,16 @@ async function handleLike() {
   }
 }
 
-    useEffect(() => {
-    if (!song?._id || !emotion) return;
-    checkLikedSong(song._id, emotion)
-      .then(data => setIsLiked(data.liked))
-      .catch(() => setIsLiked(false));
-  }, [song?._id, emotion]);
+ useEffect(() => {
+  if (!song?._id) return
+
+  async function fetchStatus() {
+    const data = await checkLikedSong(song._id)
+    setIsLiked(data.liked)
+  }
+
+  fetchStatus()
+}, [song?._id])
 
 
   return {

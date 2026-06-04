@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 const Protected = ({ children }) => {
     const { user, loading } = useAuth()
+    console.log("Protected:", { user, loading })
 
     if (loading) {
         return (

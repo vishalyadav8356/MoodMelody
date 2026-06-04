@@ -16,9 +16,9 @@ export async function toggleLikedSong(songData) {
   return response.data
 }
 
-export async function checkLikedSong(songId, emotion) {
+export async function checkLikedSong(songId) {
   const response = await api.get("/api/songs/liked/check", {
-    params: { songId, emotion }
+    params: { songId}
   })
   return response.data
 }

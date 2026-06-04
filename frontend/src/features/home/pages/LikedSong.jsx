@@ -93,9 +93,6 @@ const LikedSongs = () => {
               <div className="flex flex-col flex-1 min-w-0">
                 <p className="text-sm md:text-base font-medium truncate">{item.songTitle}</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[10px] md:text-xs px-2 py-0.5 bg-zinc-800 rounded-full capitalize text-zinc-400">
-                    {MOOD_EMOJI[item.emotion]} {item.emotion}
-                  </span>
                   <span className="hidden sm:block text-xs text-zinc-500">
                     {new Date(item.createdAt).toLocaleDateString()}
                   </span>

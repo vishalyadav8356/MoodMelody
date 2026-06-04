@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useSong } from '../hooks/useSong'
 import { moodTheme } from '../../shared/utils/moodTheme'
+import { checkLikedSong } from '../service/song.api.js'
 
 const formatTime = (seconds) => {
     if (isNaN(seconds)) return '0:00'
@@ -30,29 +31,40 @@ const Player = () => {
 
     const isFirstLoad = useRef(true)  // ← top pe add karo
 
-    useEffect(() => {
-        if (!audioRef.current) return
+    // useEffect(() => {
+    //     if (!audioRef.current) return
 
-        audioRef.current.load()
-        setCurrentTime(0)
-        setIsPlaying(false)
+    //     audioRef.current.load()
+    //     setCurrentTime(0)
+    //     setIsPlaying(false)
 
-        if (isFirstLoad.current) {
-            isFirstLoad.current = false
-            return
-        }
+    //     if (isFirstLoad.current) {
+    //         isFirstLoad.current = false
+    //         return
+    //     }
 
-        audioRef.current.addEventListener(
-            'loadeddata',
-            () => {
-                audioRef.current
-                    .play()
-                    .then(() => setIsPlaying(true))
-                    .catch(err => console.error('Autoplay blocked:', err))
-            },
-            { once: true }
-        )
-    }, [song?.url])
+    //     audioRef.current.addEventListener(
+    //         'loadeddata',
+    //         () => {
+    //             audioRef.current
+    //                 .play()
+    //                 .then(() => setIsPlaying(true))
+    //                 .catch(err => console.error('Autoplay blocked:', err))
+    //         },
+    //         { once: true }
+    //     )
+    // }, [song?.url])
+
+useEffect(() => {
+  if (!song?.songId) return
+
+  async function checkLikeStatus() {
+    const data = await checkLikedSong(song.songId)
+    setIsLiked(data.liked)
+  }
+
+  checkLikeStatus()
+}, [song?.songId])
 
     useEffect(() => {
         if (queueIndex >= 0 && audioRef.current) {
@@ -116,7 +128,7 @@ const Player = () => {
     if (!song) return null
 
     return (
-        <div className="w-full bg-black/60 backdrop-blur-md border-t border-white/10 px-4 py-2 text-white">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-md border-t border-white/10 px-4 py-2 text-white">
             <audio
                 ref={audioRef}
                 src={song.url}
@@ -192,24 +204,19 @@ const Player = () => {
                             {isPlaying ? '❚❚' : '▶'}
                         </button>
 
-                        {/* +5s */}
-                        <button className="text-white/50 hover:text-white transition text-sm">
-                            ⏮
-                        </button>
-
-                        <button className="text-white/50 hover:text-white transition text-sm">
+                         <button onClick={() => skip(+5)} className="text-white/50 hover:text-white transition text-lg">
                             ⏭
                         </button>
 
                     </div>
 
                     {/* Progress bar */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 ">
                         <span className="text-xs text-white/30 w-8 text-right">{formatTime(currentTime)}</span>
                         <div
                             ref={progressRef}
                             onClick={handleProgressClick}
-                            className="relative flex-1 h-[3px] bg-white/10 rounded-full"
+                            className="group relative flex-1 h-[3px] bg-white/10 rounded-full"
                         >
                             <div
                                 className="absolute top-0 left-0 h-1 rounded-full transition-all"

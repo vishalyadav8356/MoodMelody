@@ -23,6 +23,3 @@ export const SongContextProvider = ({ children }) => {
   )
 }
 
-SongContextProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-}

@@ -30,11 +30,13 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col overflow-hidden text-white"
-      style={{ height: 'calc(100vh - 56px)' }}  >
+<div
+  className="flex flex-col overflow-hidden text-white"
+  style={{ height: 'calc(100vh - 56px)' }}
+>
 
       {/* Main */}
-      <div className="flex-1 overflow-hidden p-3 md:p-4">
+      <div className="flex-1 overflow-hidden p-3 md:p-4 pb-28">
         <div className="h-full flex flex-col md:flex-row gap-4">
 
           {/* Left — Camera + Insights */}
@@ -158,8 +160,6 @@ const Home = () => {
 
         </div>
       </div>
-
-
 
       <Player />
     </div>

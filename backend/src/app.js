@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'https://moodmelody-qgnx.onrender.com',
+    origin: 'https://moodmelody-qqnx.onrender.com/',
     credentials: true
 }));
 app.use(express.static('./public'));

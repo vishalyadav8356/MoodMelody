@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation  } from 'react-router-dom'
 import Login from './features/auth/pages/Login'
 import Register from './features/auth/pages/Register'
 import './features/shared/styles/global.css'
@@ -10,28 +10,58 @@ import MoodBackground from './features/shared/components/MoodBackground'
 import Navbar from './features/shared/components/Navbar'
 import { useSong } from './features/home/hooks/useSong'
 
-
 const App = () => {
   const { emotion } = useSong()
+  const location = useLocation()
+
+  const hideNavbar =
+    location.pathname === '/login' ||
+    location.pathname === '/register'
+
   return (
     <div className="relative min-h-screen bg-zinc-950">
 
       <MoodBackground emotion={emotion} />
 
-
       <div className="relative z-10 flex flex-col min-h-screen">
-        <Navbar />
+
+        {!hideNavbar && <Navbar />}
+
         <div className="flex-1 overflow-auto">
           <Routes>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
-            <Route path='/' element={<Protected><Home /></Protected>} />
-            <Route path='/liked' element={<Protected><LikedSong /></Protected>} />
-            <Route path='/history' element={<Protected><MoodHistory /></Protected>} />
+
+            <Route
+              path='/'
+              element={
+                <Protected>
+                  <Home />
+                </Protected>
+              }
+            />
+
+            <Route
+              path='/liked'
+              element={
+                <Protected>
+                  <LikedSong />
+                </Protected>
+              }
+            />
+
+            <Route
+              path='/history'
+              element={
+                <Protected>
+                  <MoodHistory />
+                </Protected>
+              }
+            />
           </Routes>
         </div>
-      </div>
 
+      </div>
     </div>
   )
 }

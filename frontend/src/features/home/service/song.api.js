@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://moodmelody-qgnx.onrender.com",
+    baseURL: "https://moodmelody-qqnx.onrender.com/",
     withCredentials: true
 })    
 

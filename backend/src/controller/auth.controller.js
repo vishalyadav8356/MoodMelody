@@ -3,122 +3,207 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const redis = require('../config/cache');
 
-async function registerUser(req, res){
-    const {username, email, password} = req.body;
+async function registerUser(req, res) {
+    try {
+        const { username, email, password } = req.body;
 
-    const isAlreadyRegistered = await userModel.findOne({
-        $or:[
-            {username},
-            {email}
-        ]
-    })
-
-    if (isAlreadyRegistered){
-        return res.status(400).json({
-            message: 'Username or email is already registered',
-        })
-    }
-
-    const hash = await bcrypt.hash(password, 10);
-
-    const user = await userModel.create({
-        username,
-        email,
-        password: hash,
-    })
-
-    const token = jwt.sign({ 
-        id: user._id,
-        username: user.username,
-        }, process.env.JWT_SECRET, {expiresIn: '3d'})
-
-    res.cookie('token', token)    
-
-    return res.status(201).json({
-        message: 'User registered successfully',
-        user:{
-            id: user._id,
-            username: user.username,
-            email: user.email,
+        // Validation
+        if (!username || !email || !password) {
+            return res.status(400).json({
+                message: 'All fields are required'
+            });
         }
-    })
-        
-}
 
-async function loginUser(req, res){
-    const {email, password, username} = req.body;
-
-    const user = await userModel.findOne({
-        $or:[
-            {email},
-            {username}
-        ]
-     }).select('+password') 
-    // to include password field when fetching user data
-
-    if (!user){
-        return res.status(400).json({
-            message: 'Invalid credentials',
-        })
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid){
-        return res.status(400).json({
-            message: 'Invalid credentials',
-        })
-    }
-
-    const token = jwt.sign({
-        id: user._id,
-        username: user.username,
-    }, process.env.JWT_SECRET, {expiresIn: '3d'})   
-
-    res.cookie('token', token)
-
-    return res.status(200).json({
-        message: 'User logged in successfully',
-        user:{
-            id: user._id,
-            username: user.username,
-            email: user.email,
+        if (username.trim().length < 3) {
+            return res.status(400).json({
+                message: 'Username must be at least 3 characters'
+            });
         }
-    })
 
-}
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            return res.status(400).json({
+                message: 'Invalid email address'
+            });
+        }
 
-async function getMe(req, res){
-    const user = await userModel.findById(req.user.id);
+        if (password.length < 6) {
+            return res.status(400).json({
+                message: 'Password must be at least 6 characters'
+            });
+        }
 
-    return res.status(200).json({
-        message: 'User profile fetched successfully',
-        user
-    })
+        const isAlreadyRegistered = await userModel.findOne({
+            $or: [
+                { username },
+                { email }
+            ]
+        });
 
-}
+        if (isAlreadyRegistered) {
+            return res.status(400).json({
+                message: 'Username or email is already registered'
+            });
+        }
 
-async function logoutUser(req, res){
-    const token = req.cookies.token;
+        const hash = await bcrypt.hash(password, 10);
 
-    if (!token) {
-        return res.status(400).json({
-            message: 'Token not provided',
+        const user = await userModel.create({
+            username,
+            email,
+            password: hash
+        });
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+                username: user.username
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '3d' }
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3 * 24 * 60 * 60 * 1000
+        });
+
+        return res.status(201).json({
+            message: 'User registered successfully',
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
         });
     }
-    
-    res.clearCookie('token');
+}
 
-    await redis.set(token, Date.now().toString(), 'EX', 60 * 60); // Blacklist token for 3 days
+async function loginUser(req, res) {
+    try {
+        const { email, password } = req.body;
 
-    return res.status(201).json({
-        message: 'User logged out successfully',
-    })
+        if (!email || !password) {
+            return res.status(400).json({
+                message: 'Email and password are required'
+            });
+        }
+
+        const user = await userModel
+            .findOne({ email })
+            .select('+password');
+
+        if (!user) {
+            return res.status(400).json({
+                message: 'Invalid credentials'
+            });
+        }
+
+        const isPasswordValid = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!isPasswordValid) {
+            return res.status(400).json({
+                message: 'Invalid credentials'
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+                username: user.username
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '3d' }
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3 * 24 * 60 * 60 * 1000
+        });
+
+        return res.status(200).json({
+            message: 'User logged in successfully',
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
+async function getMe(req, res) {
+    try {
+        const user = await userModel
+            .findById(req.user.id)
+            .select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            });
+        }
+
+        return res.status(200).json({
+            message: 'User profile fetched successfully',
+            user
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+
+async function logoutUser(req, res) {
+    try {
+        const token = req.cookies.token;
+
+        if (!token) {
+            return res.status(400).json({
+                message: 'Token not provided'
+            });
+        }
+
+        res.clearCookie('token');
+
+        // Blacklist token for 3 days
+        await redis.set(
+            token,
+            Date.now().toString(),
+            'EX',
+            60 * 60 * 24 * 3
+        );
+
+        return res.status(200).json({
+            message: 'User logged out successfully'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
 }
 
 module.exports = {
     registerUser,
     loginUser,
     getMe,
-    logoutUser,
-}
+    logoutUser
+};

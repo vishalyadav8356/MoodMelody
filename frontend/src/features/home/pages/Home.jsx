@@ -53,7 +53,7 @@ const Home = () => {
 
             {/* Mood Insights card */}
             {stats && (
-              <div className="hidden md:flex bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-2 flex-col gap-3 flex-1 overflow-hidden transition-all duration-300 hover:border-white/20 hover:bg-white/10">
+              <div className="hidden md:flex bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-2 flex-col gap-3 flex-1 overflow-hidden transition-all duration-300 hover:border-white/20 hover:bg-white/10 mb-10">
 
                 {/* Header */}
                 <div className="flex items-center justify-between shrink-0">
@@ -67,7 +67,7 @@ const Home = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-1 bg-white/5 rounded-xl p-1 shrink-0 transition-all duration-300">
+                <div className="flex gap-1 bg-white/5 rounded-xl p-1 shrink-0 transition-all duration-300 ">
                   <button
                     onClick={() => setActiveTab('today')}
                     className="flex-1 py-1 text-sm font-medium rounded-lg transition-all duration-300 hover:text-white/70 active:scale-95 cursor-pointer"
@@ -154,7 +154,7 @@ const Home = () => {
           </div>
 
           {/* Right — Songs full height */}
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 flex flex-col flex-1 overflow-hidden transition-all duration-300 hover:border-white/20 hover:bg-white/10">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-3 flex flex-col flex-1 overflow-hidden transition-all duration-300 hover:border-white/20 hover:bg-white/10 mb-10">
             <SongList />
           </div>
 

@@ -204,7 +204,7 @@ useEffect(() => {
                             {isPlaying ? '❚❚' : '▶'}
                         </button>
 
-                         <button onClick={() => skip(+5)} className="text-white/50 hover:text-white transition text-lg">
+                         <button onClick={() => skip(5)} className="text-white/50 hover:text-white transition text-lg">
                             ⏭
                         </button>
 

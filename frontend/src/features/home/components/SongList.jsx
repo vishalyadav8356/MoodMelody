@@ -37,7 +37,7 @@ const SongList = () => {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full ">
 
       <p className="text-xs md:text-sm text-white/40 uppercase tracking-widest mb-3 font-medium">
         Recommended for You

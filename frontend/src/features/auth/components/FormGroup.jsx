@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 const FormGroup = ({label, placeholder, value, onChange}) => {
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-1'>
       <label className='text-white  text-2xl' htmlFor={label}> {label}</label>
       <input className='p-2 rounded-md  bg-white outline-none border-none text-black placeholder:text-gray-500' 
       value={value} onChange={onChange}
@@ -11,11 +11,5 @@ const FormGroup = ({label, placeholder, value, onChange}) => {
   )
 }
 
-FormGroup.propTypes = {
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-}
 
 export default FormGroup
